@@ -15,6 +15,22 @@ var contactList = [
     },
 ]
 
+var ContactNavButton = document.querySelector("#contactshome")
+
+ContactNavButton.addEventListener('click', function(e) {
+    cleanUpIndex()
+    renderIndex(contactList)
+    e.preventDefault()
+})
+
+var NewContactNavButton = document.querySelector("#newcontact")
+
+NewContactNavButton.addEventListener('click', function(e) {
+    cleanUpIndex()
+    renderCreate()
+    e.preventDefault()
+})
+
 function cleanUpIndex() {
     while (main.lastChild) {
         main.removeChild(main.lastChild)
@@ -29,6 +45,20 @@ function createSingleIndex(object) {
     NewDiv.classList.add("contact")
     NewDiv.innerHTML = object.name
     Link.append(NewDiv)
+
+    function CheckIndex(e) {        
+        for (let index = 0; index < contactList.length; index++) {
+            if (e.target.textContent == contactList[index].name) {
+                cleanUpIndex()
+                renderView(contactList[index])
+                e.preventDefault()
+            }
+            
+        }
+    }
+    
+    Link.addEventListener("click", CheckIndex)   
+    
     return Link
 }
 
@@ -83,6 +113,16 @@ function renderView(object) {
     ContactInfoDiv.append(ContactNameDiv, ContactEmailDiv, ContactPhoneDiv, ContactAddressDiv, ButtonsDiv, ContactNameImg)
     ContactNameDiv.append(ContactNameImg)
     ButtonsDiv.append(EditButton, CloseButton)
+
+    CloseButton = document.querySelector(".close")
+
+    function CloseListner(e) {
+        cleanUpIndex()
+        renderIndex(contactList)
+        e.preventDefault()
+    }
+
+    CloseButton.addEventListener('click', CloseListner)
 }
 
 
@@ -176,4 +216,36 @@ function renderCreate() {
     AddressDiv.append(AddressInput, ExtraAddressButton)
     EmailDiv.append(EmailInput, ExtraEmailButton)
     CreateButtonsDiv.append(SubmitButton, ResetButton)
-}
+
+    CancelButton = document.getElementById("cancel")
+
+    function CancelListner(e) {
+        cleanUpIndex()
+        renderIndex(contactList)
+        e.preventDefault()
+    }
+
+    CancelButton.addEventListener('click', CancelListner)
+    
+    SaveButton = document.getElementById("savecontact")
+
+    function CreateContact(e) {
+        let NameValue = document.querySelector("#contactname").value
+        let PhoneValue = document.querySelector("#contactphone").value
+        let AddressValue = document.querySelector("#contactaddress").value
+        let EmailValue = document.querySelector("#contactemail").value
+        var ValuesObject = {
+            name: NameValue,
+            phone: PhoneValue,
+            address: AddressValue,
+            email: EmailValue
+        }
+        
+        contactList.push(ValuesObject)
+        cleanUpCreate()
+        renderView(contactList[contactList.length - 1])
+        e.preventDefault()
+    }
+
+    SaveButton.addEventListener('click', CreateContact)
+}   
